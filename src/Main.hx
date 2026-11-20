@@ -14,6 +14,8 @@ final class Main extends hxd.App {
     }
 
     override private function update(dt: Float) {
+        // update player
+        player.update(dt);
     }
 
     static function main() {
