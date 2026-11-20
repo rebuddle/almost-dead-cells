@@ -5,6 +5,7 @@ import src.entity.Entity;
 
 class Player extends Entity {
     // variables
+    public static inline var gravity: Float = 25;
     public var inputX: Float = 0;
     public var inputY: Float = 0;
 
@@ -17,20 +18,12 @@ class Player extends Entity {
     public function update(dt: Float) {
         // get input
         inputX = 0;
-        inputY = 0;
+        inputY = gravity * dt;
 
         // calculate movement vector based on input
         if (hxd.Key.isDown(hxd.Key.A)) inputX -= 1;
         if (hxd.Key.isDown(hxd.Key.D)) inputX += 1;
-        if (hxd.Key.isDown(hxd.Key.W)) inputY -= 1;
         if (hxd.Key.isDown(hxd.Key.S)) inputY += 1;
-
-        // normalize length of vector
-        var length = Math.sqrt(inputX * inputX + inputY * inputY);
-        if (length > 0) {
-            inputX /= length;
-            inputY /= length;
-        }
 
         // move the player
         this.movement(dt, [inputX, inputY]);
