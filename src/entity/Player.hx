@@ -28,4 +28,9 @@ class Player extends Entity {
         // move the player
         this.movement(dt, [inputX, inputY]);
     }
+
+    // transform to terrain
+    public function swap_to_terrain() {
+        this.name = "Terrain";
+    }
 }

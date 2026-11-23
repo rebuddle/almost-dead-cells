@@ -8,6 +8,7 @@ final class Main extends hxd.App {
     private var terrain: src.terrain.Terrain;
     private var bodies: Array<src.entity.Player>;
     private var body_count: Int;
+    private var delay: Float;
 
     override private function init() {
         // init hxd.app
@@ -25,31 +26,26 @@ final class Main extends hxd.App {
         body_count = 10;
         bodies = [];
 
+        // game delay
+        delay = 0;
+
     }
 
     override private function update(dt: Float) {
-        // update player
-        player.update(dt);
+        delay += dt;
 
-        // // terrain collision
-        // if (body_count > 0) {
-        //     if (player.bounds.intersects(terrain.bounds)) {
-        //         // move player to top of terrain
-        //         player.y = terrain.y - player.height;
-        //         bodies.insert(0, player);
-        //         player = new src.entity.Player(s2d.width/2, Entity.size, s2d);
-        //         body_count--;
-        //     }
-        //     // body collision
-        //     for (body in bodies) {
-        //         if (player.bounds.intersects(body.bounds)) {
-        //             player.y = body.y - player.height;
-        //             bodies.insert(0, player);
-        //             player = new src.entity.Player(s2d.width/2, Entity.size, s2d);
-        //             body_count--;
-        //         }
-        //     }
-        // }
+        // delay has been met
+        if (delay > 3) {
+            // update player
+            player.update(dt);
+
+            // dropping bodies
+            if (hxd.Key.isPressed(hxd.Key.SPACE) && body_count > 0) {
+                player.swap_to_terrain();
+                player = new src.entity.Player(s2d.width/2, Entity.size, s2d);
+                body_count--;
+            }
+        }
     }
 
     static function main() {

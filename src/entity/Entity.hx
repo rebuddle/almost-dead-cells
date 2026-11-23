@@ -17,7 +17,7 @@ class Entity extends h2d.Bitmap {
         // variables
         this.x = x;
         this.y = y;
-        this.speed = 64;
+        this.speed = 320;
         this.scene = scene;
         this.name = "Entity";
 
@@ -34,7 +34,8 @@ class Entity extends h2d.Bitmap {
         // calculate new destination
         var dest_x = this.x + this.speed * vector[0] * dt;
         var dest_y = this.y + this.speed * vector[1] * dt;
-        var nextBounds = h2d.col.Bounds.fromValues(dest_x, dest_y, this.width, this.height);
+        var xBounds = h2d.col.Bounds.fromValues(dest_x, this.y -1, this.width, this.height);
+        var yBounds = h2d.col.Bounds.fromValues(this.x-1, dest_y, this.width, this.height);
 
         // collision variables
         var collision_types = ["Terrain"];
@@ -43,38 +44,26 @@ class Entity extends h2d.Bitmap {
             if (collision_types.contains(child.name)) {
                 var childBounds = child.getBounds();
                 // collision logic here
-                if (nextBounds.intersects(childBounds)) {
-                    // get bounds
-                    // child info
-                    trace(child.name);
-                    trace(childBounds);
-                    trace(child.x);
-                    trace(child.y);
-
-                    // to be info
-                    trace("Next Bounds");
-                    trace(nextBounds);
-                    trace(dest_x);
-                    trace(dest_y);
-
-                    // this object
-                    trace(this.name);
-                    trace(this.getBounds());
-                    trace(this.x);
-                    trace(this.y);
-
-                    // maybe not
-                    dest_x = this.x;
-                    dest_y = this.y;
+                if (xBounds.intersects(childBounds)) {
+                    // reset
+                    if (vector[0] > 0) dest_x = childBounds.xMin - this.width;
+                    if (vector[0] < 0) dest_x = childBounds.xMax;
+                    // dest_x = this.x;
+                }
+                if (yBounds.intersects(childBounds)) {
+                    // reset
+                    if (vector[1] > 0) dest_y = childBounds.yMin - this.height;
+                    if (vector[1] < 0) dest_y = childBounds.yMax;
+                    // dest_y = this.y;
                 }
             }
         }
 
         // // check for collisions with the scene boundaries
-        // if (this.width + dest_x > scene.width) vector[0] = 0; // stop moving right
-        // if (this.width + dest_x < 0) vector[0] = 0; // stop moving left
-        // if (this.height + dest_y > scene.height) vector[1] = 0; // stop moving down
-        // if (this.height + dest_y < 0) vector[1] = 0; // stop moving up
+        var max_x = Math.max(0, scene.width - this.width);
+        var max_y = Math.max(0, scene.height - this.height);
+        dest_x = Math.max(0, Math.min(dest_x, max_x));
+        dest_y = Math.max(0, Math.min(dest_y, max_y));
 
         // apply movement
         this.x = dest_x;
