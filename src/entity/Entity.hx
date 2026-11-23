@@ -7,6 +7,7 @@ class Entity extends h2d.Bitmap {
     public var speed: Int;
     public var scene: h2d.Scene;
     public var bounds: h2d.col.Bounds;
+    public var group: String;
 
     // create object
     public function new(x: Float, y: Float, scene: h2d.Scene) {
@@ -16,8 +17,9 @@ class Entity extends h2d.Bitmap {
         // variables
         this.x = x;
         this.y = y;
-        this.speed = 400;
+        this.speed = 64;
         this.scene = scene;
+        this.name = "Entity";
 
         // size
         this.width = size;
@@ -29,19 +31,56 @@ class Entity extends h2d.Bitmap {
     }
 
     public function movement(dt: Float, vector: Array<Float>) {
-        // check for collisions with the scene boundaries
-        if (this.x + this.width + this.speed * vector[0] * dt > scene.width) vector[0] = 0; // stop moving right
-        if (this.x + this.speed * vector[0] * dt < 0) vector[0] = 0; // stop moving left
-        if (this.y + this.height + this.speed * vector[1] * dt > scene.height) vector[1] = 0; // stop moving down
-        if (this.y + this.speed * vector[1] * dt < 0) vector[1] = 0; // stop moving up
+        // calculate new destination
+        var dest_x = this.x + this.speed * vector[0] * dt;
+        var dest_y = this.y + this.speed * vector[1] * dt;
+        var nextBounds = h2d.col.Bounds.fromValues(dest_x, dest_y, this.width, this.height);
+
+        // collision variables
+        var collision_types = ["Terrain"];
+        // loop through items to check for collision
+        for (child in this.scene) {
+            if (collision_types.contains(child.name)) {
+                var childBounds = child.getBounds();
+                // collision logic here
+                if (nextBounds.intersects(childBounds)) {
+                    // get bounds
+                    // child info
+                    trace(child.name);
+                    trace(childBounds);
+                    trace(child.x);
+                    trace(child.y);
+
+                    // to be info
+                    trace("Next Bounds");
+                    trace(nextBounds);
+                    trace(dest_x);
+                    trace(dest_y);
+
+                    // this object
+                    trace(this.name);
+                    trace(this.getBounds());
+                    trace(this.x);
+                    trace(this.y);
+
+                    // maybe not
+                    dest_x = this.x;
+                    dest_y = this.y;
+                }
+            }
+        }
+
+        // // check for collisions with the scene boundaries
+        // if (this.width + dest_x > scene.width) vector[0] = 0; // stop moving right
+        // if (this.width + dest_x < 0) vector[0] = 0; // stop moving left
+        // if (this.height + dest_y > scene.height) vector[1] = 0; // stop moving down
+        // if (this.height + dest_y < 0) vector[1] = 0; // stop moving up
 
         // apply movement
-        this.x += this.speed * vector[0] * dt;
-        this.y += this.speed * vector[1] * dt;
-        updateBounds();
-    }
+        this.x = dest_x;
+        this.y = dest_y;
 
-    public function updateBounds():Void {
-        bounds.set(this.x, this.y, this.width, this.height);
+        // update bounds
+        this.bounds.set(this.x, this.y, this.width, this.height);
     }
 }

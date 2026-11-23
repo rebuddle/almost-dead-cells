@@ -12,6 +12,9 @@ class Terrain extends h2d.Bitmap {
         // inherit super
         super(ttile, scene); // green color for terrain
 
+        // name
+        this.name = "Terrain";
+
         // variables
         this.x = x;
         this.y = y;
@@ -19,7 +22,7 @@ class Terrain extends h2d.Bitmap {
         // size
         this.width = w;
         this.height = h;
-        this.bounds = h2d.col.Bounds.fromValues(this.x, this.y, this.width, this.height);
+        this.bounds = h2d.col.Bounds.fromValues(x, y, w, h);
 
         // add to scene
         scene.add(this);

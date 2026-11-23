@@ -14,9 +14,11 @@ final class Main extends hxd.App {
         super.init();
 
         // initialize map
-        terrain = new src.terrain.Terrain(0, s2d.height - Terrain.size * 5, s2d.width, Terrain.size * 5, s2d);
+        terrain = new src.terrain.Terrain(0, s2d.height - Terrain.size * 4, s2d.width, s2d.height, s2d);
 
         // initialize player
+        trace("Player placed at:");
+        trace(s2d.width/2, Entity.size);
         player = new src.entity.Player(s2d.width/2, Entity.size, s2d);
 
         // bodies
@@ -29,25 +31,25 @@ final class Main extends hxd.App {
         // update player
         player.update(dt);
 
-        // terrain collision
-        if (body_count > 0) {
-            if (player.bounds.intersects(terrain.bounds)) {
-                // move player to top of terrain
-                player.y = terrain.y - player.height;
-                bodies.insert(0, player);
-                player = new src.entity.Player(s2d.width/2, Entity.size, s2d);
-                body_count--;
-            }
-            // body collision
-            for (body in bodies) {
-                if (player.bounds.intersects(body.bounds)) {
-                    player.y = body.y - player.height;
-                    bodies.insert(0, player);
-                    player = new src.entity.Player(s2d.width/2, Entity.size, s2d);
-                    body_count--;
-                }
-            }
-        }
+        // // terrain collision
+        // if (body_count > 0) {
+        //     if (player.bounds.intersects(terrain.bounds)) {
+        //         // move player to top of terrain
+        //         player.y = terrain.y - player.height;
+        //         bodies.insert(0, player);
+        //         player = new src.entity.Player(s2d.width/2, Entity.size, s2d);
+        //         body_count--;
+        //     }
+        //     // body collision
+        //     for (body in bodies) {
+        //         if (player.bounds.intersects(body.bounds)) {
+        //             player.y = body.y - player.height;
+        //             bodies.insert(0, player);
+        //             player = new src.entity.Player(s2d.width/2, Entity.size, s2d);
+        //             body_count--;
+        //         }
+        //     }
+        // }
     }
 
     static function main() {
