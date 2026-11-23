@@ -8,6 +8,7 @@ class Player extends Entity {
     public static inline var gravity: Float = 25;
     public var inputX: Float = 0;
     public var inputY: Float = 0;
+    public var jumpForce: Float = 12;
 
     // create object
     public function new(x: Float, y: Float, scene: h2d.Scene) {
@@ -24,6 +25,7 @@ class Player extends Entity {
         if (hxd.Key.isDown(hxd.Key.A)) inputX -= 1;
         if (hxd.Key.isDown(hxd.Key.D)) inputX += 1;
         if (hxd.Key.isDown(hxd.Key.S)) inputY += 1;
+        if (hxd.Key.isPressed(hxd.Key.W)) inputY -= jumpForce;
 
         // move the player
         this.movement(dt, [inputX, inputY]);

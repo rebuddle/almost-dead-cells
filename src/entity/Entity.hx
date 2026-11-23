@@ -8,6 +8,7 @@ class Entity extends h2d.Bitmap {
     public var scene: h2d.Scene;
     public var bounds: h2d.col.Bounds;
     public var group: String;
+    public var isGrounded: Bool;
 
     // create object
     public function new(x: Float, y: Float, scene: h2d.Scene) {
@@ -24,6 +25,7 @@ class Entity extends h2d.Bitmap {
         // size
         this.width = size;
         this.height = size;
+        this.isGrounded = false;
         this.bounds = h2d.col.Bounds.fromValues(this.x, this.y, this.width, this.height);
 
         // add to scene
@@ -52,9 +54,14 @@ class Entity extends h2d.Bitmap {
                 }
                 if (yBounds.intersects(childBounds)) {
                     // reset
-                    if (vector[1] > 0) dest_y = childBounds.yMin - this.height;
-                    if (vector[1] < 0) dest_y = childBounds.yMax;
-                    // dest_y = this.y;
+                    if (vector[1] > 0) {
+                        dest_y = childBounds.yMin - this.height;
+                        this.isGrounded = true;
+                    }
+                    if (vector[1] < 0) {
+                        dest_y = childBounds.yMax;
+                        this.isGrounded = false;
+                    }
                 }
             }
         }
